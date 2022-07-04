@@ -103,6 +103,17 @@ typedef char s8;
 /*! default max filesystem path size of the current platform*/
 #define GF_MAX_PATH	1024
 
+/*! minimum api versions to use for windows apis with mingw */
+#if (defined(__MINGW32__) || defined(__MINGW64__))
+#if (defined(_WIN32_WINNT) && _WIN32_WINNT < 0x0601)
+#undef _WIN32_WINNT
+#endif
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0601
+#endif
+#endif
+
+
 /*WINCE config*/
 #if defined(_WIN32_WCE)
 
@@ -432,7 +443,7 @@ typedef struct {
 
 #if (defined (WIN32) || defined (_WIN32_WCE)) && (defined(__MINGW32__) || !defined(__GNUC__))
 
-#if defined(__MINGW32__)
+#if (defined(__MINGW32__) && !defined(__MINGW64__))
 /*! macro for cross-platform suffix used for formatting s64 integers in logs and printf routines*/
 #define LLD_SUF "lld"
 /*! macro for cross-platform suffix used for formatting u64 integers in logs and printf routines*/
