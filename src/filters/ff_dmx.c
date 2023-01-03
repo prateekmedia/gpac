@@ -1145,6 +1145,12 @@ static GF_Err ffdmx_initialize(GF_Filter *filter)
 
 
 	res = avformat_find_stream_info(ctx->demuxer, optionsarr);
+
+	for (unsigned si = 0; si < ctx->demuxer->nb_streams; si++) {
+		av_dict_free(&optionsarr[si]);
+	}
+	gf_free(optionsarr);
+
 	if (res <0) {
 		GF_LOG(GF_LOG_ERROR, ctx->log_class, ("[%s] cannot locate streams - error %s\n", ctx->fname, av_err2str(res)));
 		e = GF_NOT_SUPPORTED;
